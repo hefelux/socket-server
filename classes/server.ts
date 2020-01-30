@@ -39,7 +39,9 @@ export default class Server {
             // Cuando mandamos un mensaje desde angular
             socket.mensaje(cliente, this.io);
             // Desconectado
-            socket.desconectar(cliente);
+            socket.desconectar(cliente, this.io);
+            // Obtenemos usuarios conectados
+            socket.obtenerUsuarios(cliente, this.io);
 
         })
 

@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import Server from '../classes/server';
+import { connectedUserList } from '../sockets/sockets';
 
 const router = Router();
 
@@ -53,6 +54,41 @@ router.post('/mensajes/:id', (req: Request, res: Response) => {
         de,
         id
     })
+});
+
+// Servicio para obtener todos los ID de los usuarios conectados
+router.get('/usuarios', (req: Request, res: Response) => {
+    
+    // Necesitamos instancias nuestro servidor de socket
+    const server = Server.instance;
+    
+    // Obtenermos clientes/usuarios conectados
+    server.io.clients( (err: any, clientes: string []) => {
+        if ( err ) {
+            return res.json({
+                ok: false,
+                err
+            })
+        }
+
+        res.json({
+            ok: true,
+            clientes: clientes
+        })
+
+    });
+    
+});
+
+// Servicio para obtener todos los usuarios conectados CON SUS DATOS
+router.get('/usuarios/detalle', (req: Request, res: Response) => {
+    
+    const userList = connectedUserList.getUserList();
+    res.json({
+        ok: true,
+        clientes: userList
+    })
+    
 });
 
 export default router;
